@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Convite Especial - Festa Surpresa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="fullscreen-container">
+        <!-- Envelope principal -->
+        <div class="envelope-wrapper" id="envelope-wrapper">
+            <!-- Envelope base -->
+            <div class="envelope-base"></div>
+            
+            <!-- Aba do envelope -->
+            <div class="envelope-flap" id="envelope-flap">
+                <!-- Lacre de cera com imagem real -->
+                <div class="wax-seal" id="wax-seal">
+                    <img src="lacre.png" alt="Lacre de cera" class="seal-image">
+                </div>
+            </div>
+
+            <!-- Overlay para detectar clique fora -->
+            <div class="overlay" id="overlay"> </div>
+
+            <!-- Convite interno que sairá do envelope -->
+            <div class="invitation-container" id="invitation-container">
+                <div class="invitation-image-wrapper">
+                    <img src="convite.png" alt="Convite da Festa Surpresa" class="invitation-image" id="invitation-image">
+                </div>
+            </div>
+        </div>
+        
+
+        
+        <!-- Instruções de interação -->
+        <div class="interaction-hint" id="interaction-hint">
+            <p>Toque no lacre para abrir o convite</p>
+            <div class="hint-arrow">↑</div>
+        </div>
+        
+        <!-- Botão para fechar (aparece após abrir) -->
+        <div class="close-button" id="close-button">
+            <span>×</span>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
+
