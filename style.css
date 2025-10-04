@@ -22,8 +22,8 @@ html, body {
     justify-content: center;
     position: relative;
     background: 
-        radial-gradient(circle at 20% 20%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(184, 134, 11, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 20% 20%, rgba(85, 107, 47, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(107, 142, 35, 0.1) 0%, transparent 50%),
         linear-gradient(135deg, #2c3e2d 0%, #3a4f3b 50%, #4a5f4b 100%);
 }
 
@@ -115,14 +115,14 @@ html, body {
     border-radius: 50%;
     transition: all 0.4s ease;
     box-shadow: 
-        0 0 0 4px rgba(255, 215, 0, 0.3),
-        0 0 20px rgba(255, 215, 0, 0.2);
+        0 0 0 4px rgba(139, 69, 19, 0.3),
+        0 0 20px rgba(139, 69, 19, 0.2);
 }
 
 .wax-seal:hover .seal-image {
     box-shadow: 
-        0 0 0 6px rgba(255, 215, 0, 0.4),
-        0 0 30px rgba(255, 215, 0, 0.3);
+        0 0 0 6px rgba(139, 69, 19, 0.4),
+        0 0 30px rgba(139, 69, 19, 0.3);
 }
 
 .envelope-wrapper.opened .wax-seal {
@@ -146,13 +146,13 @@ html, body {
 
 .envelope-wrapper.opened .invitation-container {
     opacity: 1;
-    transform: translateY(-40vh) translateX(-15vw) scale(1.6); /* Aumentado para 1.6 */
+    transform: translateY(-40vh) translateX(-15vw) scale(1.6);
     z-index: 30;
     top: 50vh;
     left: 50vw;
-    width: 85vw; /* Aumentado para 85vw */
+    width: 85vw;
     height: auto;
-    max-width: 400px; /* Aumentado para 400px */
+    max-width: 400px;
 }
 
 .invitation-image-wrapper {
@@ -283,15 +283,138 @@ html, body {
     100% { transform: translateX(-50%) scale(0) rotate(0deg); opacity: 0; }
 }
 
+@keyframes subtle-pulse {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.05); }
+}
+
 /* Efeito de partículas douradas */
 .golden-particle {
     position: absolute;
     width: 4px;
     height: 4px;
-    background: radial-gradient(circle, #ffd700, #daa520);
+    background: radial-gradient(circle, #8b4513, #a0522d);
     border-radius: 50%;
     pointer-events: none;
     z-index: 25;
+}
+
+/* Efeito de Confetes Dourados Realistas - CORRIGIDO */
+.confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 35;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    opacity: 0;
+    animation: confetti-fall linear forwards;
+}
+
+/* Formas de confetes */
+.confetti-circle {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #ffd700, #daa520);
+}
+
+.confetti-rectangle {
+    width: 10px;
+    height: 16px;
+    border-radius: 2px;
+    background: linear-gradient(45deg, #ffd700, #daa520);
+}
+
+.confetti-triangle {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 12px solid #ffd700;
+    background: transparent !important;
+}
+
+/* Cores variadas para os confetes */
+.confetti:nth-child(10n) { background: linear-gradient(45deg, #ffed4e, #ffd700); }
+.confetti:nth-child(10n+1) { background: linear-gradient(45deg, #daa520, #b8860b); }
+.confetti:nth-child(10n+2) { background: linear-gradient(45deg, #ffd700, #ffed4e); }
+.confetti:nth-child(10n+3) { background: linear-gradient(45deg, #b8860b, #daa520); }
+.confetti:nth-child(10n+4) { background: linear-gradient(45deg, #ffed4e, #b8860b); }
+.confetti:nth-child(10n+5) { background: linear-gradient(45deg, #ffa500, #ff8c00); }
+.confetti:nth-child(10n+6) { background: linear-gradient(45deg, #ffd700, #ffa500); }
+.confetti:nth-child(10n+7) { background: linear-gradient(45deg, #b8860b, #8b6914); }
+.confetti:nth-child(10n+8) { background: linear-gradient(45deg, #ffed4e, #ffdb58); }
+.confetti:nth-child(10n+9) { background: linear-gradient(45deg, #daa520, #cd853f); }
+
+/* Cores para triângulos */
+.confetti-triangle:nth-child(10n) { border-bottom-color: #ffed4e; }
+.confetti-triangle:nth-child(10n+1) { border-bottom-color: #daa520; }
+.confetti-triangle:nth-child(10n+2) { border-bottom-color: #ffd700; }
+.confetti-triangle:nth-child(10n+3) { border-bottom-color: #b8860b; }
+.confetti-triangle:nth-child(10n+4) { border-bottom-color: #ffed4e; }
+.confetti-triangle:nth-child(10n+5) { border-bottom-color: #ffa500; }
+.confetti-triangle:nth-child(10n+6) { border-bottom-color: #ffd700; }
+.confetti-triangle:nth-child(10n+7) { border-bottom-color: #b8860b; }
+.confetti-triangle:nth-child(10n+8) { border-bottom-color: #ffed4e; }
+.confetti-triangle:nth-child(10n+9) { border-bottom-color: #daa520; }
+
+/* Animação principal dos confetes - CORRIGIDA */
+@keyframes confetti-fall {
+    0% {
+        opacity: 1;
+        transform: translateY(-100px) translateX(0) rotate(0deg) scale(1);
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(100vh) translateX(var(--swing-distance)) rotate(var(--rotation)) scale(0.5);
+    }
+}
+
+/* Animação de balanço lateral */
+@keyframes confetti-swing {
+    0% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translateX(var(--swing-distance));
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Efeito de brilho nos confetes */
+.confetti::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: inherit;
+    animation: confetti-shine 2s ease-in-out infinite;
+}
+
+@keyframes confetti-shine {
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.1);
+    }
 }
 
 /* Responsividade para diferentes tamanhos de tela */
@@ -306,8 +429,8 @@ html, body {
     }
     
     .envelope-wrapper.opened .invitation-container {
-        transform: translateY(-35vh) translateX(-20vw) scale(1.4); /* Aumentado para 1.4 */
-        width: 90vw; /* Aumentado para 90vw */
+        transform: translateY(-35vh) translateX(-20vw) scale(1.4);
+        width: 90vw;
     }
     
     .wax-seal {
@@ -330,6 +453,22 @@ html, body {
     .close-button span {
         font-size: 1.6rem;
     }
+    
+    .confetti-circle {
+        width: 8px;
+        height: 8px;
+    }
+    
+    .confetti-rectangle {
+        width: 6px;
+        height: 12px;
+    }
+    
+    .confetti-triangle {
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 8px solid #ffd700;
+    }
 }
 
 @media (max-height: 600px) {
@@ -338,7 +477,7 @@ html, body {
     }
     
     .envelope-wrapper.opened .invitation-container {
-        transform: translateY(-30vh) translateX(-15vw) scale(1.3); /* Aumentado para 1.3 */
+        transform: translateY(-30vh) translateX(-15vw) scale(1.3);
     }
     
     .interaction-hint {
@@ -359,7 +498,7 @@ html, body {
     }
     
     .envelope-wrapper.opened .invitation-container {
-        transform: translateY(-25vh) translateX(-10vw) scale(1.2); /* Aumentado para 1.2 */
+        transform: translateY(-25vh) translateX(-10vw) scale(1.2);
     }
     
     .interaction-hint {
@@ -375,6 +514,10 @@ html, body {
     
     .close-button:active {
         background: rgba(0, 0, 0, 0.9);
+    }
+    
+    .wax-seal:hover {
+        transform: translateX(-50%) scale(1);
     }
 }
 
@@ -394,7 +537,7 @@ body {
 }
 
 /* Otimização de performance */
-.envelope-wrapper, .invitation-container, .wax-seal {
+.envelope-wrapper, .invitation-container, .wax-seal, .confetti {
     will-change: transform, opacity;
 }
 
@@ -443,4 +586,70 @@ body {
     );
     clip-path: inherit;
     pointer-events: none;
+}
+
+/* Estilos para o elemento de áudio (oculto) */
+audio {
+    display: none;
+}
+
+/* Melhorias de acessibilidade */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .confetti-container {
+        display: none;
+    }
+}
+
+/* Animações suaves para todos os elementos interativos */
+button, .wax-seal, .close-button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Melhorias de foco para acessibilidade */
+.wax-seal:focus-visible,
+.close-button:focus-visible {
+    outline: 2px solid #ffd700;
+    outline-offset: 4px;
+    border-radius: 50%;
+}
+
+/* Estados de loading otimizados */
+.envelope-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 15;
+}
+
+.envelope-wrapper.loading::before {
+    opacity: 1;
+}
+
+/* Efeitos de profundidade adicionais */
+.fullscreen-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 10% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 90% 80%, rgba(139, 69, 19, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
 }
