@@ -5,15 +5,158 @@ document.addEventListener('DOMContentLoaded', function() {
     const interactionHint = document.getElementById('interaction-hint');
     const closeButton = document.getElementById('close-button');
     const overlay = document.getElementById('overlay');
+    const backgroundMusic = document.getElementById('background-music');
     
     let isOpened = false;
     let isAnimating = false;
+    let musicStarted = false;
+    
+    // Função para criar efeito de confetes realistas - CORRIGIDA
+    function createRealisticConfetti() {
+        const confettiContainer = document.createElement('div');
+        confettiContainer.className = 'confetti-container';
+        document.querySelector('.fullscreen-container').appendChild(confettiContainer);
+        
+        const confettiCount = 150;
+        const colors = [
+            '#FFD700', '#DAA520', '#FFED4E', '#B8860B', '#FFA500',
+            '#FFE135', '#F0E68C', '#EEE8AA', '#F5DEB3', '#FFDEAD'
+        ];
+        
+        for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement('div');
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const isCircle = Math.random() > 0.6;
+            const isTriangle = Math.random() > 0.8;
+            
+            // Define a classe base e a classe de forma
+            confetti.className = 'confetti';
+            if (isTriangle) {
+                confetti.classList.add('confetti-triangle');
+                confetti.style.borderBottomColor = color;
+            } else if (isCircle) {
+                confetti.classList.add('confetti-circle');
+                confetti.style.background = `linear-gradient(45deg, ${color}, ${color}dd)`;
+            } else {
+                confetti.classList.add('confetti-rectangle');
+                confetti.style.background = `linear-gradient(45deg, ${color}, ${color}dd)`;
+            }
+            
+            // Configurações aleatórias para cada confete
+            const startX = Math.random() * 100; // Posição horizontal aleatória
+            const startY = -20 - Math.random() * 30; // Começa acima da tela
+            const duration = 3000 + Math.random() * 2000; // 3-5 segundos
+            const delay = Math.random() * 1000; // Delay aleatório
+            const swingDistance = (Math.random() - 0.5) * 200; // Movimento lateral
+            const rotation = Math.random() * 720; // Rotação total
+            
+            // Aplica estilos diretamente
+            confetti.style.cssText = `
+                position: absolute;
+                left: ${startX}vw;
+                top: ${startY}px;
+                opacity: 0;
+                animation: confetti-fall ${duration}ms linear ${delay}ms forwards;
+                --swing-distance: ${swingDistance}px;
+                --rotation: ${rotation}deg;
+                z-index: 35;
+            `;
+            
+            confettiContainer.appendChild(confetti);
+            
+            // Remove o confete após a animação
+            setTimeout(() => {
+                if (confetti.parentNode) {
+                    confetti.remove();
+                }
+            }, duration + delay + 1000);
+        }
+        
+        // Remove o container após todos os confetes terminarem
+        setTimeout(() => {
+            if (confettiContainer.parentNode) {
+                confettiContainer.remove();
+            }
+        }, 8000);
+    }
+    
+    // Função alternativa mais simples para confetes - SE A PRIMEIRA NÃO FUNCIONAR
+    function createSimpleConfetti() {
+        const confettiContainer = document.createElement('div');
+        confettiContainer.className = 'confetti-container';
+        document.querySelector('.fullscreen-container').appendChild(confettiContainer);
+        
+        const confettiCount = 100;
+        const colors = ['#FFD700', '#DAA520', '#FFED4E', '#B8860B', '#FFA500'];
+        
+        for (let i = 0; i < confettiCount; i++) {
+            const confetti = document.createElement('div');
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            const size = 8 + Math.random() * 8;
+            const isCircle = Math.random() > 0.5;
+            
+            confetti.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                background: ${color};
+                border-radius: ${isCircle ? '50%' : '2px'};
+                left: ${Math.random() * 100}vw;
+                top: -30px;
+                opacity: 0.9;
+                z-index: 35;
+            `;
+            
+            confettiContainer.appendChild(confetti);
+            
+            // Animação usando Web Animations API
+            const animation = confetti.animate([
+                { 
+                    transform: 'translateY(0) rotate(0deg)',
+                    opacity: 1
+                },
+                { 
+                    transform: `translateY(calc(100vh + 50px)) rotate(${360 + Math.random() * 360}deg)`,
+                    opacity: 0
+                }
+            ], {
+                duration: 2000 + Math.random() * 3000,
+                delay: Math.random() * 1000,
+                easing: 'cubic-bezier(0.3, 0.1, 0.3, 1)'
+            });
+            
+            animation.onfinish = () => {
+                if (confetti.parentNode) {
+                    confetti.remove();
+                }
+            };
+        }
+        
+        setTimeout(() => {
+            if (confettiContainer.parentNode) {
+                confettiContainer.remove();
+            }
+        }, 6000);
+    }
+    
+    // Função para iniciar a música
+    function startBackgroundMusic() {
+        if (!musicStarted) {
+            backgroundMusic.volume = 0.7;
+            backgroundMusic.play().then(() => {
+                musicStarted = true;
+                console.log('Música de fundo iniciada');
+            }).catch(error => {
+                console.log('Autoplay bloqueado, aguardando interação do usuário:', error);
+                showElegantNotification('Toque em qualquer lugar para iniciar a música', 5000);
+            });
+        }
+    }
     
     // Função para centralizar perfeitamente o convite
     function centerInvitation() {
         const invitation = document.getElementById('invitation-container');
         if (invitation) {
-            // Força a centralização usando position fixed e transform
             invitation.style.position = 'fixed';
             invitation.style.top = '50%';
             invitation.style.left = '50%';
@@ -27,6 +170,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isOpened || isAnimating) return;
         
         isAnimating = true;
+        
+        // Tenta iniciar a música se ainda não foi iniciada
+        if (!musicStarted) {
+            startBackgroundMusic();
+        }
         
         // Vibração no mobile se disponível
         if (navigator.vibrate) {
@@ -43,6 +191,14 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => {
             envelopeWrapper.classList.add('opened');
             isOpened = true;
+            
+            // Cria efeito de confetes - TENTA AMBAS AS VERSÕES
+            try {
+                createRealisticConfetti();
+            } catch (error) {
+                console.log('Usando confetes simples devido a erro:', error);
+                createSimpleConfetti();
+            }
             
             // Garante a centralização perfeita após a animação
             setTimeout(() => {
@@ -109,12 +265,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 top: ${startY}px;
                 width: ${size}px;
                 height: ${size}px;
-                background: radial-gradient(circle, #ffd700, #daa520);
+                background: radial-gradient(circle, #8b4513, #a0522d);
                 border-radius: 50%;
                 pointer-events: none;
                 z-index: 25;
                 opacity: 1;
-                box-shadow: 0 0 ${size * 2}px rgba(255, 215, 0, 0.6);
+                box-shadow: 0 0 ${size * 2}px rgba(139, 69, 19, 0.6);
             `;
             
             document.querySelector('.fullscreen-container').appendChild(particle);
@@ -153,6 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event listeners aprimorados
     waxSeal.addEventListener('click', function(e) {
         e.stopPropagation();
+        startBackgroundMusic();
         openEnvelope();
     });
     
@@ -182,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function() {
         e.stopPropagation();
         if (!isOpened && !isAnimating) {
             this.style.transform = 'translateX(-50%) scale(1.08)';
-            this.style.filter = 'drop-shadow(0 15px 30px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.4))';
+            this.style.filter = 'drop-shadow(0 15px 30px rgba(0, 0, 0, 0.7)) drop-shadow(0 0 20px rgba(139, 69, 19, 0.4))';
         }
     });
     
@@ -192,6 +349,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isOpened && !isAnimating) {
             this.style.transform = 'translateX(-50%) scale(1)';
             this.style.filter = 'drop-shadow(0 10px 20px rgba(0, 0, 0, 0.5))';
+            startBackgroundMusic();
             openEnvelope();
         }
     });
@@ -200,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
     waxSeal.addEventListener('mouseenter', function() {
         if (!isOpened && !isAnimating) {
             this.style.transform = 'translateX(-50%) scale(1.12)';
-            this.style.filter = 'drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 25px rgba(255, 215, 0, 0.3))';
+            this.style.filter = 'drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 25px rgba(139, 69, 19, 0.3))';
         }
     });
     
@@ -267,10 +425,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Detecção de orientação aprimorada para dispositivos móveis
     function handleOrientationChange() {
         setTimeout(() => {
-            // Força um reflow para ajustar o layout
             document.body.style.height = window.innerHeight + 'px';
             
-            // Recentra o convite se estiver aberto
             if (isOpened) {
                 centerInvitation();
             }
@@ -315,6 +471,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Efeito de loading inicial aprimorado
     window.addEventListener('load', function() {
         document.querySelector('.fullscreen-container').style.opacity = '1';
+        
+        // Tenta iniciar a música automaticamente
+        setTimeout(() => {
+            startBackgroundMusic();
+        }, 1000);
         
         // Animação de entrada para o lacre
         setTimeout(() => {
@@ -361,7 +522,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Aplica centralização específica para mobile
         setInterval(ensureMobileCentering, 100);
     }
     
@@ -379,11 +539,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Verifica centralização a cada 200ms quando aberto
     setInterval(ensureContinuousCentering, 200);
     
-    // Debug: log para verificar se o script está funcionando
-    console.log('Convite digital aprimorado carregado com sucesso!');
-    console.log('Funcionalidades: centralização perfeita, estética refinada, interatividade aprimorada');
+    // Permite que qualquer interação do usuário inicie a música
+    document.addEventListener('click', function() {
+        if (!musicStarted) {
+            startBackgroundMusic();
+        }
+    });
+    
+    document.addEventListener('touchstart', function() {
+        if (!musicStarted) {
+            startBackgroundMusic();
+        }
+    });
+    
+    console.log('Convite digital carregado com sucesso! Confetes implementados.');
 });
-
